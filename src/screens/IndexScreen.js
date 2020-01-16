@@ -1,38 +1,49 @@
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet, FlatList, Button, TouchableOpacity } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { Feather, Entypo } from '@expo/vector-icons';
 import { Context } from '../context/BlogContext';
 
-const IndexScreen = () => {
+const IndexScreen = ({ navigation }) => {
     const { state, addBlogPost, deleteBlogPost } = useContext(Context);
 
     return (
         <View>
-            <Button
-                title="Add Blog Post"
-                onPress={addBlogPost}
-            />
             <FlatList
                 data={state}
                 keyExtractor={blogPost => blogPost.title}
-                renderItem={({ item }) => {
-                    return (
-                        <View style={styles.viewStyle}>
-                            <Text style={styles.textStyle}>{item.title} - {item.id}</Text>
-                            <TouchableOpacity onPress={() => deleteBlogPost(item.id)}>
-                                <Feather
-                                    style={styles.iconStyle}
-                                    name="trash"
-                                />
-
+                renderItem={
+                    ({ item }) => {
+                        return (
+                            <TouchableOpacity
+                                onPress={() => navigation.navigate('Show', { id: item.id })}
+                            >
+                                <View style={styles.viewStyle}>
+                                    <Text style={styles.textStyle}>{item.title} - {item.id}</Text>
+                                    <TouchableOpacity
+                                        onPress={() => deleteBlogPost(item.id)}
+                                    >
+                                        <Feather
+                                            style={styles.iconStyle}
+                                            name="trash"
+                                        />
+                                    </TouchableOpacity>
+                                </View>
                             </TouchableOpacity>
-                        </View>
-                    )
-                }}
+                        )
+                    }
+                }
             />
         </View>
-    )
-}
+    );
+};
+
+IndexScreen.navigationOptions = ({ navigation }) => {
+    return {
+        headerRight: <TouchableOpacity onPress={() => navigation.navigate('Create')}>
+            <Entypo size={30} name="plus" />
+        </TouchableOpacity>
+    };
+};
 
 const styles = StyleSheet.create({
     iconStyle: {
