@@ -33,6 +33,7 @@ const addBlogPost = dispatch => {
     }
 }
 
+
 const deleteBlogPost = dispatch => {
     return (id) => {
         dispatch({ type: 'delete_blog_post', payload: id });
